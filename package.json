@@ -1,0 +1,37 @@
+{
+  "name": "testigosdigital",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "db:check": "node --env-file=.env.local scripts/check-db.mjs",
+    "db:migrate": "node --env-file=.env.local scripts/migrate.mjs",
+    "db:import:giros": "node --env-file=.env.local scripts/import-giros.mjs",
+    "db:import:evidencias": "node --env-file=.env.local scripts/import-evidencias.mjs",
+    "db:verify": "node --env-file=.env.local scripts/verify-data.mjs",
+    "db:setup": "npm run db:check && npm run db:migrate && npm run db:import:giros && npm run db:import:evidencias && npm run db:verify"
+  },
+  "dependencies": {
+    "next": "16.2.1",
+    "pg": "^8.16.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/pg": "^8.15.0",
+    "@types/papaparse": "^5.3.15",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.1",
+    "papaparse": "^5.5.2",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "xlsx": "^0.18.5"
+  }
+}
