@@ -1,0 +1,54 @@
+name: Deploy to Hidora
+# Sitio SSR (Next.js standalone, backend Postgres). El poller del servidor detecta el
+# build y lo despliega (modelo PULL, solo tráfico saliente). Transporte por Release
+# (evita la cuota de artefactos de Actions). El NOMBRE del workflow debe seguir siendo
+# exactamente "Deploy to Hidora" (el poller filtra por ese nombre).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-testigosdigital
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (Next.js standalone)
+        run: npm run build
+
+      - name: Package standalone artifact
+        run: |
+          set -e
+          mkdir -p .next/standalone/.next/static
+          cp -r .next/static/. .next/standalone/.next/static/
+          if [ -d public ]; then
+            mkdir -p .next/standalone/public
+            cp -r public/. .next/standalone/public/
+          fi
+          tar -czf build.tgz -C .next/standalone .
+          echo "Artifact size: $(du -h build.tgz | cut -f1)"
+
+      - name: Publish build to Release (evita cuota de artefactos)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create deploy -R "${{ github.repository }}" -t deploy -n "latest build" || echo "release ya existe"
+          gh release upload deploy build.tgz -R "${{ github.repository }}" --clobber
