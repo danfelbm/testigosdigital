@@ -14,7 +14,7 @@ try {
 }
 
 // Chequeo informativo (NO bloqueante) del estado de la API REST:
-// este proyecto no la usa, pero pactoweb/ivancepeda sí.
+// este proyecto no la usa, pero otros proyectos de la instancia sí.
 const restUrl = process.env.SUPABASE_URL;
 if (restUrl) {
   try {
@@ -22,7 +22,7 @@ if (restUrl) {
     if (res.status === 402) {
       console.warn(
         "⚠ La API REST de Supabase sigue restringida por cuota (402). " +
-          "No afecta a este proyecto, pero pactoweb/ivancepeda seguirán caídos."
+          "No afecta a este proyecto, pero sí a otros que usan la API REST."
       );
     } else {
       console.log(`✓ API REST responde (HTTP ${res.status})`);

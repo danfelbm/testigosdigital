@@ -1,12 +1,12 @@
 # Testigos Digital
 
-Landing de consulta del estado de pago para testigos electorales: la persona
+Landing de consulta del estado de viáticos para testigos electorales: la persona
 ingresa su número de cédula y la aplicación responde uno de tres estados, sin
 exponer datos personales completos.
 
 | Estado | Significado |
 |---|---|
-| `girado` | La cédula está en el cargue de giros → el pago ya fue enviado a Supergiros. |
+| `girado` | La cédula está en el cargue de giros → los viáticos ya fueron enviados a Supergiros. |
 | `en_proceso` | La cédula está en las evidencias validadas pero aún no en el cargue de giros. |
 | `no_encontrada` | La cédula no aparece en ninguna de las dos fuentes. |
 

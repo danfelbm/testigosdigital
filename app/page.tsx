@@ -8,11 +8,11 @@ export default function Home() {
           Testigos Digital
         </p>
         <h1 className="text-3xl font-bold tracking-tight">
-          Consulta el estado de tu pago
+          Consulta el estado de tus viáticos
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-slate-600">
-          Ingresa tu número de cédula para verificar si tu pago como testigo
-          electoral ya fue girado o está en proceso.
+          Ingresa tu número de cédula para verificar si tus viáticos como
+          testigo electoral ya fueron girados o están en proceso.
         </p>
       </header>
 

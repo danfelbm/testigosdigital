@@ -1,5 +1,5 @@
 // Importa "BD CARGUE DE GIROS V4.xlsx" (hoja CARGUE SUPERGIROS) a testigos_giros.
-// Presencia en esta tabla = el pago ya fue girado.
+// Presencia en esta tabla = los viáticos ya fueron girados.
 // Idempotente: upsert por cédula. Uso: npm run db:import:giros [-- /ruta/al.xlsx]
 import xlsx from "xlsx";
 import { createDbClient, upsertBatches, normalizarCedula, limpiarNombre } from "./db.mjs";

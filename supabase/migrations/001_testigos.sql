@@ -5,14 +5,14 @@
 -- vía REST (anon / authenticated) como defensa en profundidad.
 -- ============================================================
 
--- Pago ya girado (fuente: BD CARGUE DE GIROS V4.xlsx)
+-- Viáticos ya girados (fuente: BD CARGUE DE GIROS V4.xlsx)
 CREATE TABLE IF NOT EXISTS public.testigos_giros (
   cedula      TEXT PRIMARY KEY CHECK (cedula ~ '^[0-9]{4,11}$'),
   nombre      TEXT NOT NULL,
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Validado para pago (fuente: evidencias CSV, agregado por cédula)
+-- Validado para viáticos (fuente: evidencias CSV, agregado por cédula)
 CREATE TABLE IF NOT EXISTS public.testigos_evidencias (
   cedula      TEXT PRIMARY KEY CHECK (cedula ~ '^[0-9]{4,11}$'),
   nombre      TEXT NOT NULL,

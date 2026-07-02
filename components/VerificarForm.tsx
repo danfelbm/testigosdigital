@@ -16,19 +16,19 @@ const ESTILOS: Record<Estado, string> = {
 };
 
 const TITULOS: Record<Estado, string> = {
-  girado: "Pago girado",
-  en_proceso: "Validada — pago en proceso",
+  girado: "Viáticos girados",
+  en_proceso: "Validada — viáticos en proceso",
   no_encontrada: "Cédula no encontrada",
 };
 
 function descripcion(resultado: Resultado): string {
   switch (resultado.estado) {
     case "girado":
-      return `El giro ya fue enviado a nombre de ${resultado.nombre ?? "la persona registrada"}. Puedes reclamarlo en cualquier punto Supergiros presentando tu cédula.`;
+      return `El giro de tus viáticos ya fue enviado a nombre de ${resultado.nombre ?? "la persona registrada"}. Puedes reclamarlo en cualquier punto Supergiros presentando tu cédula.`;
     case "en_proceso":
-      return `Tu evidencia fue validada a nombre de ${resultado.nombre ?? "la persona registrada"}. El pago está en proceso de giro; consulta de nuevo en unos días.`;
+      return `Tu evidencia fue validada a nombre de ${resultado.nombre ?? "la persona registrada"}. Tus viáticos están en proceso de giro; consulta de nuevo en unos días.`;
     case "no_encontrada":
-      return "Tu cédula no aparece en la base de pagos ni en las evidencias validadas. Si fuiste testigo electoral y cargaste tu evidencia, contacta a tu coordinación.";
+      return "Tu cédula no aparece en la base de viáticos ni en las evidencias validadas. Si fuiste testigo electoral y cargaste tu evidencia, contacta a tu coordinación.";
   }
 }
 

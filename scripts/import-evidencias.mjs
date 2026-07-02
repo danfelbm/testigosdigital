@@ -1,5 +1,5 @@
 // Importa el CSV de evidencias (agregado por cédula) a testigos_evidencias.
-// Presencia en esta tabla = cédula validada para pago. Un testigo puede cubrir
+// Presencia en esta tabla = cédula validada para viáticos. Un testigo puede cubrir
 // varias mesas → se agrega y solo se guarda cedula, nombre y num_mesas
 // (minimización deliberada: teléfonos, correos y datos electorales NO se cargan).
 // Idempotente. Uso: npm run db:import:evidencias [-- /ruta/al.csv]
