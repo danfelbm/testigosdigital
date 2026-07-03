@@ -55,7 +55,9 @@ export async function upsertBatches(client, table, columns, rows, updateSet) {
 }
 
 export function normalizarCedula(valor) {
-  const limpia = String(valor ?? "").replace(/\D/g, "");
+  // Sin ceros a la izquierda: descarta placeholders tipo "000000" y
+  // unifica formatos con padding para que el lookup por cédula coincida.
+  const limpia = String(valor ?? "").replace(/\D/g, "").replace(/^0+/, "");
   return /^[0-9]{4,11}$/.test(limpia) ? limpia : null;
 }
 

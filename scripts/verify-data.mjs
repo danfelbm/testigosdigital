@@ -9,6 +9,7 @@ try {
 
   const [giros] = await q("SELECT count(*)::int AS n FROM testigos_giros");
   const [evidencias] = await q("SELECT count(*)::int AS n FROM testigos_evidencias");
+  const [listado] = await q("SELECT count(*)::int AS n FROM testigos_listado");
   const [interseccion] = await q(
     `SELECT count(*)::int AS n FROM testigos_evidencias e
      JOIN testigos_giros g ON g.cedula = e.cedula`
@@ -17,7 +18,8 @@ try {
 
   console.log(`testigos_giros:       ${giros.n} (esperado ≈ 27.936)`);
   console.log(`testigos_evidencias:  ${evidencias.n} (esperado ≈ 24.871)`);
-  console.log(`intersección:         ${interseccion.n}`);
+  console.log(`testigos_listado:     ${listado.n} (esperado ≈ 147.6xx)`);
+  console.log(`giros ∩ evidencias:   ${interseccion.n}`);
   console.log(`testigos_consultas:   ${consultas.n}`);
 
   const girado = await q("SELECT cedula FROM testigos_giros LIMIT 1");
@@ -26,18 +28,26 @@ try {
      WHERE NOT EXISTS (SELECT 1 FROM testigos_giros g WHERE g.cedula = e.cedula)
      LIMIT 1`
   );
-  let noEncontrada = "9999999999";
+  const sinEvidencia = await q(
+    `SELECT l.cedula FROM testigos_listado l
+     WHERE NOT EXISTS (SELECT 1 FROM testigos_giros g WHERE g.cedula = l.cedula)
+       AND NOT EXISTS (SELECT 1 FROM testigos_evidencias e WHERE e.cedula = l.cedula)
+     LIMIT 1`
+  );
+  let noRegistrada = "9999999999";
   const existe = await q(
     `SELECT 1 FROM testigos_giros WHERE cedula = $1
-     UNION SELECT 1 FROM testigos_evidencias WHERE cedula = $1`,
-    [noEncontrada]
+     UNION SELECT 1 FROM testigos_evidencias WHERE cedula = $1
+     UNION SELECT 1 FROM testigos_listado WHERE cedula = $1`,
+    [noRegistrada]
   );
-  if (existe.length > 0) noEncontrada = "9999999998";
+  if (existe.length > 0) noRegistrada = "9999999998";
 
   console.log("\nCédulas de muestra para pruebas:");
   console.log(`  girado:        ${girado[0]?.cedula ?? "(tabla vacía)"}`);
   console.log(`  en_proceso:    ${enProceso[0]?.cedula ?? "(ninguna)"}`);
-  console.log(`  no_encontrada: ${noEncontrada}`);
+  console.log(`  sin_evidencia: ${sinEvidencia[0]?.cedula ?? "(ninguna)"}`);
+  console.log(`  no_registrada: ${noRegistrada}`);
 
   // Verificación de blindaje: RLS activo y sin políticas
   const rls = await q(

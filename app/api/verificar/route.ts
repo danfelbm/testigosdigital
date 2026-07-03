@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 const MIN_RESPONSE_MS = 400;
 const DAILY_LIMIT_PER_IP = 100;
 
-type Estado = "girado" | "en_proceso" | "no_encontrada";
+type Estado = "girado" | "en_proceso" | "sin_evidencia" | "no_registrada";
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -38,7 +38,8 @@ export async function POST(request: Request) {
     return json({ success: false, error: "Cuerpo de la petición inválido" }, { status: 400 });
   }
 
-  const limpia = typeof cedula === "string" ? cedula.replace(/\D/g, "") : "";
+  const limpia =
+    typeof cedula === "string" ? cedula.replace(/\D/g, "").replace(/^0+/, "") : "";
   if (!/^\d{4,11}$/.test(limpia)) {
     return json(
       { success: false, error: "Cédula inválida. Ingresa solo números (4 a 11 dígitos)." },
@@ -103,13 +104,17 @@ async function consultar(
       return { tipo: "limite_diario" };
     }
 
-    const [giro, evidencia] = await Promise.all([
+    const [giro, evidencia, listado] = await Promise.all([
       pool.query<{ nombre: string }>(
         "SELECT nombre FROM testigos_giros WHERE cedula = $1",
         [cedula]
       ),
       pool.query<{ nombre: string }>(
         "SELECT nombre FROM testigos_evidencias WHERE cedula = $1",
+        [cedula]
+      ),
+      pool.query<{ nombre: string }>(
+        "SELECT nombre FROM testigos_listado WHERE cedula = $1",
         [cedula]
       ),
     ]);
@@ -122,8 +127,11 @@ async function consultar(
     } else if (evidencia.rows.length > 0) {
       estado = "en_proceso";
       nombre = maskName(evidencia.rows[0].nombre);
+    } else if (listado.rows.length > 0) {
+      estado = "sin_evidencia";
+      nombre = maskName(listado.rows[0].nombre);
     } else {
-      estado = "no_encontrada";
+      estado = "no_registrada";
       nombre = null;
     }
 

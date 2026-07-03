@@ -11,8 +11,9 @@
     "db:migrate": "node --env-file=.env.local scripts/migrate.mjs",
     "db:import:giros": "node --env-file=.env.local scripts/import-giros.mjs",
     "db:import:evidencias": "node --env-file=.env.local scripts/import-evidencias.mjs",
+    "db:import:listado": "node --env-file=.env.local scripts/import-listado.mjs",
     "db:verify": "node --env-file=.env.local scripts/verify-data.mjs",
-    "db:setup": "npm run db:check && npm run db:migrate && npm run db:import:giros && npm run db:import:evidencias && npm run db:verify"
+    "db:setup": "npm run db:check && npm run db:migrate && npm run db:import:giros && npm run db:import:evidencias && npm run db:import:listado && npm run db:verify"
   },
   "dependencies": {
     "next": "16.2.1",

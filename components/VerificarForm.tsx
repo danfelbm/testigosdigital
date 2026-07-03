@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type Estado = "girado" | "en_proceso" | "no_encontrada";
+type Estado = "girado" | "en_proceso" | "sin_evidencia" | "no_registrada";
 
 interface Resultado {
   estado: Estado;
@@ -12,13 +12,15 @@ interface Resultado {
 const ESTILOS: Record<Estado, string> = {
   girado: "border-emerald-300 bg-emerald-50 text-emerald-900",
   en_proceso: "border-amber-300 bg-amber-50 text-amber-900",
-  no_encontrada: "border-slate-300 bg-slate-100 text-slate-700",
+  sin_evidencia: "border-orange-300 bg-orange-50 text-orange-900",
+  no_registrada: "border-slate-300 bg-slate-100 text-slate-700",
 };
 
 const TITULOS: Record<Estado, string> = {
   girado: "Viáticos girados",
   en_proceso: "Validada — viáticos en proceso",
-  no_encontrada: "Cédula no encontrada",
+  sin_evidencia: "Sin evidencia en el sistema",
+  no_registrada: "Sin registro de testigo",
 };
 
 function descripcion(resultado: Resultado): string {
@@ -27,8 +29,10 @@ function descripcion(resultado: Resultado): string {
       return `El giro de tus viáticos ya fue enviado a nombre de ${resultado.nombre ?? "la persona registrada"}. Puedes reclamarlo en cualquier punto Supergiros presentando tu cédula.`;
     case "en_proceso":
       return `Tu evidencia fue validada a nombre de ${resultado.nombre ?? "la persona registrada"}. Tus viáticos están en proceso de giro; consulta de nuevo en unos días.`;
-    case "no_encontrada":
-      return "Tu cédula no aparece en la base de viáticos ni en las evidencias validadas. Si fuiste testigo electoral y cargaste tu evidencia, contacta a tu coordinación.";
+    case "sin_evidencia":
+      return `Estás en el listado de testigos a nombre de ${resultado.nombre ?? "la persona registrada"}, pero no hay evidencia enviada en el sistema. Si enviaste tu acta, comunícate con tu coordinación.`;
+    case "no_registrada":
+      return "No hay registro de que hayas sido testigo electoral en este proceso. Verifica que el número de cédula esté bien escrito.";
   }
 }
 

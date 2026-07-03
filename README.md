@@ -1,14 +1,15 @@
 # Testigos Digital
 
 Landing de consulta del estado de viáticos para testigos electorales: la persona
-ingresa su número de cédula y la aplicación responde uno de tres estados, sin
+ingresa su número de cédula y la aplicación responde uno de cuatro estados, sin
 exponer datos personales completos.
 
 | Estado | Significado |
 |---|---|
 | `girado` | La cédula está en el cargue de giros → los viáticos ya fueron enviados a Supergiros. |
 | `en_proceso` | La cédula está en las evidencias validadas pero aún no en el cargue de giros. |
-| `no_encontrada` | La cédula no aparece en ninguna de las dos fuentes. |
+| `sin_evidencia` | La cédula está en el listado de testigos registrados, pero no hay evidencia enviada en el sistema. |
+| `no_registrada` | La cédula no aparece en ninguna fuente: no hay registro de que haya sido testigo. |
 
 ## Arquitectura y seguridad
 
@@ -35,12 +36,13 @@ npm run db:setup   # check + migrate + import giros + import evidencias + verify
 ```
 
 O paso a paso: `db:check`, `db:migrate`, `db:import:giros [-- ruta.xlsx]`,
-`db:import:evidencias [-- ruta.csv]`, `db:verify`.
+`db:import:evidencias [-- ruta.csv]`, `db:import:listado [-- ruta.csv]`, `db:verify`.
 
 Fuentes de datos originales (no incluidas en el repo):
 
 - `BD CARGUE DE GIROS V4.xlsx`, hoja `CARGUE SUPERGIROS` (encabezados en la fila 3, cédula en `No DE DOCUMENTO`) → `testigos_giros`.
 - `evidencias-consolidado-*.csv` (UTF-8 BOM; un testigo puede aparecer en varias mesas) → se agrega por cédula en `testigos_evidencias` (solo cédula, nombre y número de mesas; teléfonos, correos y datos electorales **no** se cargan, por minimización de datos).
+- `testigos-listado-*.csv` (UTF-8 BOM; registro de testigos, cédula en `Documento`) → `testigos_listado` (solo cédula y nombre; emails, teléfonos, fechas de nacimiento y demás columnas **no** se cargan).
 
 Los imports son idempotentes (upsert por cédula): re-ejecutarlos con archivos
 actualizados refresca los datos sin duplicar.
